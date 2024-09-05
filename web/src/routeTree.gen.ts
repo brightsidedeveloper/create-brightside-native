@@ -16,32 +16,87 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
-const IndexLazyImport = createFileRoute('/')()
+const appTabsRouteLazyImport = createFileRoute('/(app)/_tabs')()
+const appTabsIndexLazyImport = createFileRoute('/(app)/_tabs/')()
+const appTabsRandomLazyImport = createFileRoute('/(app)/_tabs/random')()
+const appTabsCalculatedLazyImport = createFileRoute('/(app)/_tabs/calculated')()
 
 // Create/Update Routes
 
-const IndexLazyRoute = IndexLazyImport.update({
-  path: '/',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+const appTabsRouteLazyRoute = appTabsRouteLazyImport
+  .update({
+    id: '/(app)/_tabs',
+    getParentRoute: () => rootRoute,
+  } as any)
+  .lazy(() => import('./routes/(app)/_tabs/route.lazy').then((d) => d.Route))
+
+const appTabsIndexLazyRoute = appTabsIndexLazyImport
+  .update({
+    path: '/',
+    getParentRoute: () => appTabsRouteLazyRoute,
+  } as any)
+  .lazy(() => import('./routes/(app)/_tabs/index.lazy').then((d) => d.Route))
+
+const appTabsRandomLazyRoute = appTabsRandomLazyImport
+  .update({
+    path: '/random',
+    getParentRoute: () => appTabsRouteLazyRoute,
+  } as any)
+  .lazy(() => import('./routes/(app)/_tabs/random.lazy').then((d) => d.Route))
+
+const appTabsCalculatedLazyRoute = appTabsCalculatedLazyImport
+  .update({
+    path: '/calculated',
+    getParentRoute: () => appTabsRouteLazyRoute,
+  } as any)
+  .lazy(() =>
+    import('./routes/(app)/_tabs/calculated.lazy').then((d) => d.Route),
+  )
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/(app)/_tabs': {
+      id: '/_tabs'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexLazyImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof appTabsRouteLazyImport
+      parentRoute: typeof undefinedRoute
+    }
+    '/(app)/_tabs/calculated': {
+      id: '/_tabs/calculated'
+      path: '/calculated'
+      fullPath: '/calculated'
+      preLoaderRoute: typeof appTabsCalculatedLazyImport
+      parentRoute: typeof appTabsRouteLazyImport
+    }
+    '/(app)/_tabs/random': {
+      id: '/_tabs/random'
+      path: '/random'
+      fullPath: '/random'
+      preLoaderRoute: typeof appTabsRandomLazyImport
+      parentRoute: typeof appTabsRouteLazyImport
+    }
+    '/(app)/_tabs/': {
+      id: '/_tabs/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof appTabsIndexLazyImport
+      parentRoute: typeof appTabsRouteLazyImport
     }
   }
 }
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren({ IndexLazyRoute })
+export const routeTree = rootRoute.addChildren({
+  appTabsRouteLazyRoute: appTabsRouteLazyRoute.addChildren({
+    appTabsCalculatedLazyRoute,
+    appTabsRandomLazyRoute,
+    appTabsIndexLazyRoute,
+  }),
+})
 
 /* prettier-ignore-end */
 
@@ -51,11 +106,28 @@ export const routeTree = rootRoute.addChildren({ IndexLazyRoute })
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/_tabs"
       ]
     },
-    "/": {
-      "filePath": "index.lazy.tsx"
+    "/_tabs": {
+      "filePath": "(app)/_tabs/route.lazy.tsx",
+      "children": [
+        "/_tabs/calculated",
+        "/_tabs/random",
+        "/_tabs/"
+      ]
+    },
+    "/_tabs/calculated": {
+      "filePath": "(app)/_tabs/calculated.lazy.tsx",
+      "parent": "/_tabs"
+    },
+    "/_tabs/random": {
+      "filePath": "(app)/_tabs/random.lazy.tsx",
+      "parent": "/_tabs"
+    },
+    "/_tabs/": {
+      "filePath": "(app)/_tabs/index.lazy.tsx",
+      "parent": "/_tabs"
     }
   }
 }

@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "ESNext", // Change to 'ESNext' to support ES module syntax
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"],
+    "outDir": "./dist",
+    "moduleResolution": "node", // Optional: Helps with resolving modules in Node.js
+    "allowSyntheticDefaultImports": true // Optional: Allows default imports from modules with no default export
+  },
+  "include": ["**/*.ts"]
+}

@@ -57,6 +57,15 @@
   --chart-5: 340 75% 55%;
 }
 
+:root {
+  --tab-bar-height: 84px;
+  --header-bar-height: 64px;
+}
+
+html {
+  @apply overflow-hidden;
+}
+
 body {
   @apply bg-background text-foreground antialiased;
 }

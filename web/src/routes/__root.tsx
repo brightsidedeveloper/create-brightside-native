@@ -1,6 +1,5 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/router-devtools'
-import { BrightQueryDevTools, BrightWebTheme } from 'bsdweb'
+import { BrightWebTheme } from 'bsdweb'
 
 export const Route = createRootRoute({
   beforeLoad() {
@@ -11,12 +10,12 @@ export const Route = createRootRoute({
   component: () => (
     <>
       <Outlet />
-      {!import.meta.env.PROD && (
+      {/* {!import.meta.env.PROD && (
         <>
           <BrightQueryDevTools />
           <TanStackRouterDevtools />
         </>
-      )}
+      )} */}
     </>
   ),
 })

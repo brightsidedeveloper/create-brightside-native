@@ -1,10 +1,8 @@
 import BrightSideWebView from '@/components/BrightSideWebView'
 import useTheme from '@/hooks/useTheme'
-import useWebView from '@/hooks/useWebView'
 import { View } from 'react-native'
 
 export default function App() {
-  const { sendMessage } = useWebView()
   const { backgroundColor } = useTheme()
 
   return (
